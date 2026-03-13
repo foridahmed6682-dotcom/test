@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>কৃষকবাজার — সরাসরি কৃষক থেকে</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #1a3d0f;
+    --green-mid: #2d6a1f;
+    --green-bright: #3d8a2a;
+    --green-light: #7dc75a;
+    --green-pale: #e8f5e2;
+    --green-wash: #f4faf0;
+    --amber: #c47c1a;
+    --amber-light: #fef3dc;
+    --earth: #7a5c3a;
+    --earth-light: #f5ede2;
+    --white: #ffffff;
+    --gray-50: #f9f9f7;
+    --gray-100: #f0efeb;
+    --gray-200: #dddbd4;
+    --gray-400: #9b9890;
+    --gray-600: #5a5852;
+    --gray-800: #2a2926;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.07);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.13);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-full: 99px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Hind Siliguri', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--green-deep);
+    padding: 0 20px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .nav-logo {
+    font-family: 'Tiro Bangla', serif;
+    font-size: 22px;
+    color: var(--green-light);
+    letter-spacing: -0.3px;
+  }
+  .nav-logo span { color: var(--white); }
+  .nav-tabs { display: flex; gap: 4px; }
+  .nav-tab {
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-family: 'Hind Siliguri', sans-serif;
+    transition: all 0.18s;
+  }
+  .nav-tab:hover { color: white; background: rgba(255,255,255,0.1); }
+  .nav-tab.active { background: var(--green-bright); color: white; }
+  .nav-cart {
+    background: var(--amber);
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Hind Siliguri', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.18s;
+  }
+  .nav-cart:hover { background: #a86515; }
+  .cart-count {
+    background: white;
+    color: var(--amber);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%);
+    padding: 40px 20px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -30px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 50%;
+  }
+  .hero-label {
+    display: inline-block;
+    background: var(--green-pale);
+    color: var(--green-deep);
+    padding: 4px 14px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-family: 'Tiro Bangla', serif;
+    font-size: 30px;
+    color: white;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .hero p {
+    color: rgba(255,255,255,0.72);
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    color: white;
+    text-align: center;
+  }
+  .hero-stat strong { display: block; font-size: 20px; font-weight: 700; color: var(--green-light); }
+  .hero-stat span { font-size: 12px; opacity: 0.75; }
+
+  /* CONTAINER */
+  .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+
+  /* SECTION HEADER */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .section-title { font-family: 'Tiro Bangla', serif; font-size: 20px; color: var(--green-deep); }
+  .section-badge { background: var(--green-pale); color: var(--green-mid); padding: 4px 12px; border-radius: var(--radius-full); font-size: 12px; font-weight: 600; }
+
+  /* FILTER BAR */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .search-box {
+    flex: 1;
+    min-width: 180px;
+    padding: 9px 14px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-full);
+    font-size: 14px;
+    font-family: 'Hind Siliguri', sans-serif;
+    background: white;
+    color: var(--gray-800);
+    outline: none;
+    transition: border-color 0.18s;
+  }
+  .search-box:focus { border-color: var(--green-bright); }
+  .filter-btn {
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    border: 1.5px solid var(--gray-200);
+    background: white;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Hind Siliguri', sans-serif;
+    color: var(--gray-600);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover, .filter-btn.active { background: var(--green-deep); color: white; border-color: var(--green-deep); }
+
+  /* PRODUCT GRID */
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+
+  .product-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border: 1px solid var(--gray-100);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .product-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .product-img {
+    height: 130px;
+    background: var(--green-pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52px;
+    position: relative;
+  }
+  .product-fresh {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: var(--green-mid);
+    color: white;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+  }
+  .product-body { padding: 12px 14px; }
+  .product-name { font-size: 15px; font-weight: 600; color: var(--gray-800); margin-bottom: 3px; }
+  .product-farmer { font-size: 12px; color: var(--gray-400); margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+  .product-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .product-price { font-size: 17px; font-weight: 700; color: var(--green-mid); }
+  .product-unit { font-size: 12px; color: var(--gray-400); }
+  .product-qty { font-size: 12px; color: var(--amber); background: var(--amber-light); padding: 2px 8px; border-radius: var(--radius-full); }
+  .product-location { font-size: 12px; color: var(--gray-400); margin-bottom: 10px; }
+  .add-cart-btn {
+    width: 100%;
+    padding: 9px;
+    background: var(--green-deep);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Hind Siliguri', sans-serif;
+    transition: background 0.18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .add-cart-btn:hover { background: var(--green-bright); }
+  .add-cart-btn.added { background: var(--amber); }
+
+  /* FARMER PANEL */
+  .farmer-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 600px) { .farmer-panel { grid-template-columns: 1fr; } }
+
+  .panel-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-100);
+  }
+  .panel-title { font-size: 16px; font-weight: 600; color: var(--green-deep); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .farmer-profile { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--green-wash); border-radius: var(--radius-sm); margin-bottom: 16px; }
+  .farmer-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--green-mid); color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; flex-shrink: 0; }
+  .farmer-name { font-size: 14px; font-weight: 600; color: var(--green-deep); }
+  .farmer-loc { font-size: 12px; color: var(--gray-400); }
+
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--gray-600); margin-bottom: 5px; margin-top: 12px; }
+  label:first-of-type { margin-top: 0; }
+  input[type=text], input[type=number], select, textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: 'Hind Siliguri', sans-serif;
+    color: var(--gray-800);
+    background: var(--gray-50);
+    outline: none;
+    transition: border-color 0.18s;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--green-bright); background: white; }
+  textarea { height: 70px; resize: none; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .submit-btn {
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    background: var(--green-deep);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Hind Siliguri', sans-serif;
+    transition: background 0.18s;
+  }
+  .submit-btn:hover { background: var(--green-bright); }
+
+  .my-products { display: flex; flex-direction: column; gap: 10px; }
+  .my-product-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-100);
+  }
+  .mp-icon { font-size: 26px; flex-shrink: 0; }
+  .mp-info { flex: 1; }
+  .mp-name { font-size: 14px; font-weight: 600; color: var(--gray-800); }
+  .mp-meta { font-size: 12px; color: var(--gray-400); }
+  .mp-price { font-size: 15px; font-weight: 700; color: var(--green-mid); white-space: nowrap; }
+  .mp-del { background: none; border: none; color: var(--gray-400); cursor: pointer; font-size: 16px; padding: 4px; }
+  .mp-del:hover { color: #c0392b; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--green-deep);
+    color: white;
+    padding: 12px 24px;
+    border-radius: var(--radius-full);
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* CART SCREEN */
+  .cart-list { display: flex; flex-direction: column; gap: 12px; }
+  .cart-item {
+    background: white;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-100);
+  }
+  .ci-icon { font-size: 36px; flex-shrink: 0; }
+  .ci-info { flex: 1; }
+  .ci-name { font-size: 15px; font-weight: 600; color: var(--gray-800); }
+  .ci-farmer { font-size: 12px; color: var(--gray-400); }
+  .ci-qty-ctrl { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .qty-btn { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--gray-200); background: white; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--green-deep); transition: all 0.15s; }
+  .qty-btn:hover { background: var(--green-deep); color: white; border-color: var(--green-deep); }
+  .qty-num { font-size: 15px; font-weight: 700; color: var(--gray-800); min-width: 24px; text-align: center; }
+  .ci-price { font-size: 17px; font-weight: 700; color: var(--green-mid); white-space: nowrap; }
+  .ci-remove { background: none; border: none; color: var(--gray-300); cursor: pointer; font-size: 18px; }
+  .ci-remove:hover { color: #c0392b; }
+
+  .cart-summary {
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-100);
+  }
+  .summary-row { display: flex; justify-content: space-between; font-size: 14px; color: var(--gray-600); padding: 6px 0; }
+  .summary-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; color: var(--green-deep); padding: 12px 0 0; border-top: 2px dashed var(--gray-200); margin-top: 6px; }
+  .checkout-btn {
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px;
+    background: var(--amber);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Hind Siliguri', sans-serif;
+    transition: background 0.18s;
+  }
+  .checkout-btn:hover { background: #a86515; }
+  .payment-options { display: flex; gap: 10px; margin-top: 12px; }
+  .pay-opt {
+    flex: 1;
+    padding: 10px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s;
+    color: var(--gray-600);
+  }
+  .pay-opt:hover, .pay-opt.selected { border-color: var(--green-bright); color: var(--green-deep); background: var(--green-pale); }
+
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--gray-400); }
+  .empty-icon { font-size: 56px; margin-bottom: 12px; }
+  .empty-title { font-size: 17px; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; }
+
+  /* ORDERS */
+  .order-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-100);
+  }
+  .order-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .order-id { font-size: 14px; font-weight: 700; color: var(--green-deep); }
+  .order-date { font-size: 12px; color: var(--gray-400); }
+  .order-status { padding: 3px 12px; border-radius: var(--radius-full); font-size: 12px; font-weight: 600; }
+  .status-pending { background: var(--amber-light); color: var(--amber); }
+  .status-done { background: var(--green-pale); color: var(--green-mid); }
+  .order-items-list { border-top: 1px dashed var(--gray-200); padding-top: 10px; }
+  .order-item-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--gray-600); padding: 3px 0; }
+  .order-total { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; color: var(--green-deep); border-top: 1px solid var(--gray-200); margin-top: 8px; padding-top: 8px; }
+
+  /* DASHBOARD */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .stat-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-100);
+    border-left: 4px solid var(--green-mid);
+  }
+  .stat-label { font-size: 12px; color: var(--gray-400); margin-bottom: 6px; }
+  .stat-val { font-size: 26px; font-weight: 700; color: var(--green-deep); }
+  .stat-sub { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: white;
+    border-radius: var(--radius);
+    padding: 28px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal-icon { font-size: 52px; margin-bottom: 12px; }
+  .modal-title { font-family: 'Tiro Bangla', serif; font-size: 22px; color: var(--green-deep); margin-bottom: 8px; }
+  .modal-desc { font-size: 14px; color: var(--gray-600); line-height: 1.7; margin-bottom: 20px; }
+  .modal-btn { padding: 12px 32px; background: var(--green-deep); color: white; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Hind Siliguri', sans-serif; }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 24px; }
+    nav { padding: 0 12px; }
+    .nav-tab { padding: 5px 10px; font-size: 12px; }
+    .product-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  }
+
+  /* AUTH OVERLAY */
+  .auth-overlay {
+    position: fixed; inset: 0;
+    background: linear-gradient(160deg, var(--green-deep) 0%, #0d2408 100%);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .auth-overlay.hidden { display: none; }
+  .auth-box {
+    background: white;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+    overflow: hidden;
+  }
+  .auth-header {
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    padding: 28px 28px 24px;
+    text-align: center;
+  }
+  .auth-logo {
+    font-family: 'Tiro Bangla', serif;
+    font-size: 28px;
+    color: var(--green-light);
+    margin-bottom: 4px;
+  }
+  .auth-logo span { color: white; }
+  .auth-tagline { font-size: 13px; color: rgba(255,255,255,0.65); }
+  .auth-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .auth-tab {
+    flex: 1;
+    padding: 14px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--gray-400);
+    border-bottom: 2px solid transparent;
+    transition: all 0.18s;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    font-family: 'Hind Siliguri', sans-serif;
+  }
+  .auth-tab.active { color: var(--green-deep); border-bottom: 2px solid var(--green-bright); }
+  .auth-form { padding: 24px 28px 28px; }
+  .auth-form label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-600);
+    margin-bottom: 5px;
+    margin-top: 14px;
+  }
+  .auth-form label:first-of-type { margin-top: 0; }
+  .auth-input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: 'Hind Siliguri', sans-serif;
+    color: var(--gray-800);
+    background: var(--gray-50);
+    outline: none;
+    transition: border-color 0.18s, background 0.18s;
+  }
+  .auth-input:focus { border-color: var(--green-bright); background: white; }
+  .auth-role-select {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .role-opt {
+    flex: 1;
+    padding: 10px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s;
+    color: var(--gray-600);
+    background: var(--gray-50);
+  }
+  .role-opt:hover { border-color: var(--green-bright); color: var(--green-deep); }
+  .role-opt.selected { border-color: var(--green-bright); background: var(--green-pale); color: var(--green-deep); }
+  .role-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+  .auth-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 13px;
+    background: var(--green-deep);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Hind Siliguri', sans-serif;
+    transition: background 0.18s;
+  }
+  .auth-btn:hover { background: var(--green-bright); }
+  .auth-error {
+    background: #fdf0f0;
+    color: #c0392b;
+    border: 1px solid #f5c6c6;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+  }
+  .auth-divider { text-align: center; font-size: 12px; color: var(--gray-400); margin: 14px 0 0; }
+
+  /* NAV USER */
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    transition: background 0.15s;
+  }
+  .nav-user:hover { background: rgba(255,255,255,0.1); }
+  .nav-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--green-light);
+    color: var(--green-deep);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-user-name { font-size: 13px; color: white; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-right { display: flex; align-items: center; gap: 8px; }
+
+  /* PROFILE DROPDOWN */
+  .profile-drop {
+    position: fixed;
+    top: 60px; right: 16px;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--gray-100);
+    min-width: 200px;
+    z-index: 300;
+    display: none;
+    overflow: hidden;
+  }
+  .profile-drop.show { display: block; }
+  .pd-header { padding: 16px; background: var(--green-wash); border-bottom: 1px solid var(--gray-100); }
+  .pd-name { font-size: 15px; font-weight: 700; color: var(--green-deep); }
+  .pd-role { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+  .pd-item { padding: 12px 16px; font-size: 14px; color: var(--gray-600); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  .pd-item:hover { background: var(--gray-50); }
+  .pd-logout { color: #c0392b; border-top: 1px solid var(--gray-100); }
+</style>
+</head>
+<body>
+
+<!-- AUTH OVERLAY -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="auth-logo"><span>কৃষক</span>বাজার</div>
+      <div class="auth-tagline">সরাসরি কৃষক থেকে আপনার রান্নাঘরে</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">লগইন</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">নিবন্ধন</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="auth-form" id="loginForm">
+      <label>মোবাইল নম্বর / ইমেইল</label>
+      <input class="auth-input" type="text" id="loginPhone" placeholder="01XXXXXXXXX বা name@email.com">
+      <label>পাসওয়ার্ড</label>
+      <input class="auth-input" type="password" id="loginPass" placeholder="পাসওয়ার্ড লিখুন">
+      <div class="auth-error" id="loginError"></div>
+      <button class="auth-btn" onclick="doLogin()">লগইন করুন →</button>
+      <div class="auth-divider">অ্যাকাউন্ট নেই? <a href="#" onclick="switchAuthTab('register')" style="color:var(--green-mid);font-weight:600">নিবন্ধন করুন</a></div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div class="auth-form" id="registerForm" style="display:none">
+      <label>আপনি কে?</label>
+      <div class="auth-role-select">
+        <div class="role-opt selected" id="role-buyer" onclick="selectRole('buyer')">
+          <span class="role-icon">🛒</span>ক্রেতা
+        </div>
+        <div class="role-opt" id="role-farmer" onclick="selectRole('farmer')">
+          <span class="role-icon">🌾</span>কৃষক
+        </div>
+      </div>
+      <label>পুরো নাম</label>
+      <input class="auth-input" type="text" id="regName" placeholder="আপনার নাম লিখুন">
+      <label>মোবাইল নম্বর</label>
+      <input class="auth-input" type="text" id="regPhone" placeholder="01XXXXXXXXX">
+      <label>এলাকা</label>
+      <input class="auth-input" type="text" id="regLocation" placeholder="যেমন: ঢাকা, ময়মনসিংহ">
+      <label>পাসওয়ার্ড</label>
+      <input class="auth-input" type="password" id="regPass" placeholder="কমপক্ষে ৬ অক্ষর">
+      <label>পাসওয়ার্ড নিশ্চিত করুন</label>
+      <input class="auth-input" type="password" id="regPass2" placeholder="পাসওয়ার্ড আবার লিখুন">
+      <div class="auth-error" id="regError"></div>
+      <button class="auth-btn" onclick="doRegister()">নিবন্ধন করুন →</button>
+      <div class="auth-divider">অ্যাকাউন্ট আছে? <a href="#" onclick="switchAuthTab('login')" style="color:var(--green-mid);font-weight:600">লগইন করুন</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE DROPDOWN -->
+<div class="profile-drop" id="profileDrop">
+  <div class="pd-header">
+    <div class="pd-name" id="pdName">—</div>
+    <div class="pd-role" id="pdRole">—</div>
+  </div>
+  <div class="pd-item" onclick="closeProfileDrop()">📦 আমার অর্ডার</div>
+  <div class="pd-item" onclick="closeProfileDrop()">⚙️ প্রোফাইল সেটিং</div>
+  <div class="pd-item pd-logout" onclick="doLogout()">🚪 লগআউট</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo"><span>কৃষক</span>বাজার</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showScreen('buyer')">🛒 বাজার</button>
+    <button class="nav-tab" onclick="showScreen('farmer')">🌾 কৃষক</button>
+    <button class="nav-tab" onclick="showScreen('orders')">📦 অর্ডার</button>
+    <button class="nav-tab" onclick="showScreen('dashboard')">📊 ড্যাশবোর্ড</button>
+  </div>
+  <div class="nav-right">
+    <button class="nav-cart" onclick="showScreen('cart')">
+      🛒 কার্ট <span class="cart-count" id="cartCount">0</span>
+    </button>
+    <div class="nav-user" onclick="toggleProfileDrop()">
+      <div class="nav-avatar" id="navAvatar">?</div>
+      <div class="nav-user-name" id="navUserName">অ্যাকাউন্ট</div>
+    </div>
+  </div>
+</nav>
+
+<!-- BUYER SCREEN -->
+<div class="screen active" id="screen-buyer">
+  <div class="hero">
+    <div class="hero-label">সরাসরি মাঠ থেকে আপনার রান্নাঘরে</div>
+    <h1>তাজা পণ্য, সঠিক দামে</h1>
+    <p>মধ্যস্বত্বভোগী নেই — কৃষক সরাসরি আপনার কাছে</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong id="statFarmers">৫</strong><span>কৃষক</span></div>
+      <div class="hero-stat"><strong id="statProducts">৮</strong><span>পণ্য</span></div>
+      <div class="hero-stat"><strong id="statOrders">১২</strong><span>অর্ডার সম্পন্ন</span></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="filter-bar">
+      <input class="search-box" type="text" placeholder="🔍 পণ্য খুঁজুন..." oninput="filterProducts(this.value)" id="searchInput">
+      <button class="filter-btn active" onclick="filterCat('', this)">সব</button>
+      <button class="filter-btn" onclick="filterCat('সবজি', this)">🥦 সবজি</button>
+      <button class="filter-btn" onclick="filterCat('ফল', this)">🍎 ফল</button>
+      <button class="filter-btn" onclick="filterCat('ধান/চাল', this)">🌾 ধান/চাল</button>
+      <button class="filter-btn" onclick="filterCat('মশলা', this)">🌶️ মশলা</button>
+    </div>
+    <div class="section-header">
+      <div class="section-title">তাজা পণ্য</div>
+      <div class="section-badge" id="productCount">৮টি পণ্য</div>
+    </div>
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+</div>
+
+<!-- FARMER SCREEN -->
+<div class="screen" id="screen-farmer">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">কৃষকের প্যানেল</div>
+    </div>
+    <div class="farmer-panel">
+      <div class="panel-card">
+        <div class="panel-title">➕ নতুন পণ্য যোগ করুন</div>
+        <div class="farmer-profile">
+          <div class="farmer-avatar" id="farmerInitial">র</div>
+          <div>
+            <div class="farmer-name" id="farmerNameDisplay">রাহেলা বেগম</div>
+            <div class="farmer-loc">📍 ময়মনসিংহ</div>
+          </div>
+        </div>
+        <label>আপনার নাম</label>
+        <input type="text" id="fName" placeholder="যেমন: করিম মিয়া" oninput="updateFarmerName(this.value)">
+        <label>পণ্যের নাম</label>
+        <input type="text" id="fProduct" placeholder="যেমন: টমেটো">
+        <label>ক্যাটাগরি ও এলাকা</label>
+        <div class="form-row">
+          <select id="fCategory">
+            <option value="">ক্যাটাগরি বেছে নিন</option>
+            <option>সবজি</option>
+            <option>ফল</option>
+            <option>ধান/চাল</option>
+            <option>মশলা</option>
+            <option>ডাল</option>
+          </select>
+          <input type="text" id="fLocation" placeholder="এলাকা">
+        </div>
+        <label>দাম ও পরিমাণ</label>
+        <div class="form-row">
+          <input type="number" id="fPrice" placeholder="দাম ৳/কেজি">
+          <input type="number" id="fQty" placeholder="পরিমাণ (কেজি)">
+        </div>
+        <label>অতিরিক্ত তথ্য (ঐচ্ছিক)</label>
+        <textarea id="fDesc" placeholder="পণ্য সম্পর্কে কিছু লিখুন..."></textarea>
+        <button class="submit-btn" onclick="addProduct()">✅ পণ্য লিস্ট করুন</button>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-title">📋 আমার পণ্য তালিকা</div>
+        <div class="my-products" id="myProductList">
+          <div class="empty-state" style="padding: 30px 0;">
+            <div class="empty-icon">🌱</div>
+            <div>এখনো কোনো পণ্য নেই</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART SCREEN -->
+<div class="screen" id="screen-cart">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">🛒 আপনার কার্ট</div>
+    </div>
+    <div id="cartContent"></div>
+  </div>
+</div>
+
+<!-- ORDERS SCREEN -->
+<div class="screen" id="screen-orders">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">📦 অর্ডার তালিকা</div>
+      <div class="section-badge" id="orderCount">২টি অর্ডার</div>
+    </div>
+    <div id="ordersList"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD SCREEN -->
+<div class="screen" id="screen-dashboard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">📊 ড্যাশবোর্ড</div>
+    </div>
+    <div class="stats-grid" id="dashStats"></div>
+    <div class="section-header">
+      <div class="section-title">সাম্প্রতিক অর্ডার</div>
+    </div>
+    <div id="dashOrders"></div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <div class="modal-title">অর্ডার সফল!</div>
+    <div class="modal-desc" id="modalDesc">আপনার অর্ডার গৃহীত হয়েছে। কৃষককে SMS-এ জানানো হবে। ২৪–৪৮ ঘণ্টার মধ্যে ডেলিভারি পাবেন।</div>
+    <button class="modal-btn" onclick="closeModal()">ঠিক আছে</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const ICONS = { 'সবজি':'🥦','ফল':'🍎','ধান/চাল':'🌾','মশলা':'🌶️','ডাল':'🫘','':'📦' };
+
+let products = [
+  { id:1, name:'টমেটো', category:'সবজি', price:35, qty:30, location:'কুমিল্লা', farmer:'সুমাইয়া বেগম', icon:'🍅', fresh:true },
+  { id:2, name:'আলু', category:'সবজি', price:24, qty:80, location:'রংপুর', farmer:'করিম মিয়া', icon:'🥔', fresh:true },
+  { id:3, name:'পেঁয়াজ', category:'সবজি', price:55, qty:40, location:'পাবনা', farmer:'রহিম উদ্দিন', icon:'🧅', fresh:false },
+  { id:4, name:'আম', category:'ফল', price:90, qty:25, location:'রাজশাহী', farmer:'আসমা খাতুন', icon:'🥭', fresh:true },
+  { id:5, name:'কাঁচা মরিচ', category:'মশলা', price:80, qty:15, location:'যশোর', farmer:'জলিল মিয়া', icon:'🌶️', fresh:true },
+  { id:6, name:'মিনিকেট চাল', category:'ধান/চাল', price:65, qty:100, location:'দিনাজপুর', farmer:'হাসান আলী', icon:'🌾', fresh:false },
+  { id:7, name:'বেগুন', category:'সবজি', price:40, qty:20, location:'নরসিংদী', farmer:'রাহেলা বেগম', icon:'🍆', fresh:true },
+  { id:8, name:'কলা', category:'ফল', price:30, qty:50, location:'মুন্সীগঞ্জ', farmer:'সালমা বেগম', icon:'🍌', fresh:true },
+];
+let cart = [];
+let orders = [
+  { id:'#১০০১', items:[{name:'টমেটো',qty:3,price:35},{name:'আলু',qty:5,price:24}], total:225, date:'আজ ১০:৩০', status:'সম্পন্ন', farmer:'সুমাইয়া বেগম' },
+  { id:'#১০০২', items:[{name:'কাঁচা মরিচ',qty:2,price:80}], total:160, date:'গতকাল ৩:১৫', status:'প্রক্রিয়াধীন', farmer:'জলিল মিয়া' },
+];
+let filteredProducts = [...products];
+let currentCat = '';
+let currentSearch = '';
+let selectedPayment = 'cod';
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const map = {buyer:0,farmer:1,orders:2,dashboard:3};
+  if (map[name] !== undefined) document.querySelectorAll('.nav-tab')[map[name]].classList.add('active');
+  if (name === 'buyer') renderProducts();
+  if (name === 'cart') renderCart();
+  if (name === 'orders') renderOrders();
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'farmer') renderMyProducts();
+}
+
+function renderProducts() {
+  const grid = document.getElementById('productGrid');
+  const list = filteredProducts;
+  document.getElementById('productCount').textContent = list.length + 'টি পণ্য';
+  if (!list.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🔍</div><div class="empty-title">কোনো পণ্য পাওয়া যায়নি</div></div>';
+    return;
+  }
+  grid.innerHTML = list.map(p => {
+    const inCart = cart.find(c => c.id === p.id);
+    return `<div class="product-card">
+      <div class="product-img">
+        <span style="font-size:52px">${p.icon}</span>
+        ${p.fresh ? '<span class="product-fresh">তাজা</span>' : ''}
+      </div>
+      <div class="product-body">
+        <div class="product-name">${p.name}</div>
+        <div class="product-farmer">👨‍🌾 ${p.farmer}</div>
+        <div class="product-meta">
+          <div><span class="product-price">৳${p.price}</span><span class="product-unit">/কেজি</span></div>
+          <span class="product-qty">${p.qty} কেজি</span>
+        </div>
+        <div class="product-location">📍 ${p.location}</div>
+        <button class="add-cart-btn ${inCart ? 'added' : ''}" onclick="addToCart(${p.id})">
+          ${inCart ? '✓ কার্টে আছে' : '+ কার্টে যোগ করুন'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterProducts(q) {
+  currentSearch = q;
+  applyFilters();
+}
+function filterCat(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+function applyFilters() {
+  filteredProducts = products.filter(p =>
+    (!currentCat || p.category === currentCat) &&
+    (!currentSearch || p.name.toLowerCase().includes(currentSearch.toLowerCase()) || p.farmer.includes(currentSearch))
+  );
+  renderProducts();
+}
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  const existing = cart.find(x => x.id === id);
+  if (existing) { existing.qty++; }
+  else { cart.push({ ...p, qty: 1 }); }
+  updateCartCount();
+  showToast(p.name + ' কার্টে যোগ হয়েছে!');
+  renderProducts();
+}
+function updateCartCount() {
+  const total = cart.reduce((s, x) => s + x.qty, 0);
+  document.getElementById('cartCount').textContent = total;
+}
+
+function renderCart() {
+  const el = document.getElementById('cartContent');
+  if (!cart.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🛒</div><div class="empty-title">কার্ট খালি</div><p style="font-size:13px;color:var(--gray-400)">বাজার থেকে পণ্য যোগ করুন</p></div>';
+    return;
+  }
+  const total = cart.reduce((s, x) => s + x.price * x.qty, 0);
+  const delivery = 50;
+  el.innerHTML = `
+    <div class="cart-list">${cart.map(item => `
+      <div class="cart-item">
+        <div class="ci-icon">${item.icon}</div>
+        <div class="ci-info">
+          <div class="ci-name">${item.name}</div>
+          <div class="ci-farmer">👨‍🌾 ${item.farmer} · 📍 ${item.location}</div>
+          <div class="ci-qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+            <span style="font-size:12px;color:var(--gray-400)">কেজি</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="ci-price">৳${item.price * item.qty}</div>
+          <button class="ci-remove" onclick="removeFromCart(${item.id})">✕</button>
+        </div>
+      </div>
+    `).join('')}</div>
+    <div class="cart-summary">
+      <div class="summary-row"><span>পণ্যের মোট</span><span>৳${total}</span></div>
+      <div class="summary-row"><span>ডেলিভারি চার্জ</span><span>৳${delivery}</span></div>
+      <div class="summary-total"><span>সর্বমোট</span><span>৳${total + delivery}</span></div>
+      <div style="margin-top:16px;font-size:13px;font-weight:600;color:var(--gray-600);margin-bottom:8px;">পেমেন্ট পদ্ধতি</div>
+      <div class="payment-options">
+        <div class="pay-opt selected" id="pay-cod" onclick="selectPay('cod')">💵 ক্যাশ অন ডেলিভারি</div>
+        <div class="pay-opt" id="pay-bkash" onclick="selectPay('bkash')">📱 bKash</div>
+        <div class="pay-opt" id="pay-nagad" onclick="selectPay('nagad')">💳 Nagad</div>
+      </div>
+      <button class="checkout-btn" onclick="placeOrder()">অর্ডার করুন →</button>
+    </div>`;
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(x => x.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
+  updateCartCount();
+  renderCart();
+}
+function removeFromCart(id) {
+  cart = cart.filter(x => x.id !== id);
+  updateCartCount();
+  renderCart();
+}
+function selectPay(method) {
+  selectedPayment = method;
+  document.querySelectorAll('.pay-opt').forEach(e => e.classList.remove('selected'));
+  document.getElementById('pay-' + method).classList.add('selected');
+}
+
+function placeOrder() {
+  if (!cart.length) return;
+  const total = cart.reduce((s,x) => s + x.price * x.qty, 0) + 50;
+  const id = '#' + (1000 + orders.length + 1);
+  orders.unshift({
+    id,
+    items: cart.map(x => ({name: x.name, qty: x.qty, price: x.price})),
+    total,
+    date: 'এইমাত্র',
+    status: 'প্রক্রিয়াধীন',
+    farmer: cart[0].farmer
+  });
+  document.getElementById('modalDesc').textContent = `অর্ডার ${id} গৃহীত হয়েছে। মোট: ৳${total}। কৃষককে জানানো হবে।`;
+  document.getElementById('successModal').classList.add('show');
+  cart = [];
+  updateCartCount();
+  document.getElementById('statOrders').textContent = (12 + orders.length - 2) + '+';
+}
+function closeModal() {
+  document.getElementById('successModal').classList.remove('show');
+  showScreen('orders');
+}
+
+function renderOrders() {
+  const el = document.getElementById('ordersList');
+  document.getElementById('orderCount').textContent = orders.length + 'টি অর্ডার';
+  el.innerHTML = orders.map(o => `
+    <div class="order-card">
+      <div class="order-head">
+        <div>
+          <div class="order-id">অর্ডার ${o.id}</div>
+          <div class="order-date">🕐 ${o.date}</div>
+        </div>
+        <span class="order-status ${o.status === 'সম্পন্ন' ? 'status-done' : 'status-pending'}">${o.status}</span>
+      </div>
+      <div class="order-items-list">
+        ${o.items.map(i => `<div class="order-item-row"><span>${i.name} × ${i.qty} কেজি</span><span>৳${i.price * i.qty}</span></div>`).join('')}
+        <div class="order-total"><span>মোট</span><span>৳${o.total}</span></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderDashboard() {
+  const totalRevenue = orders.reduce((s, o) => s + o.total, 0);
+  document.getElementById('dashStats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">মোট পণ্য</div><div class="stat-val">${products.length}</div><div class="stat-sub">লিস্টে আছে</div></div>
+    <div class="stat-card" style="border-left-color:var(--amber)"><div class="stat-label">মোট অর্ডার</div><div class="stat-val">${orders.length}</div><div class="stat-sub">এ পর্যন্ত</div></div>
+    <div class="stat-card" style="border-left-color:#2980b9"><div class="stat-label">মোট আয়</div><div class="stat-val">৳${totalRevenue}</div><div class="stat-sub">সকল অর্ডার মিলিয়ে</div></div>
+    <div class="stat-card" style="border-left-color:#8e44ad"><div class="stat-label">কৃষক</div><div class="stat-val">৫</div><div class="stat-sub">নিবন্ধিত</div></div>
+  `;
+  document.getElementById('dashOrders').innerHTML = orders.slice(0,3).map(o => `
+    <div class="order-card">
+      <div class="order-head">
+        <div><div class="order-id">অর্ডার ${o.id}</div><div class="order-date">${o.date}</div></div>
+        <div style="text-align:right"><span class="order-status ${o.status==='সম্পন্ন'?'status-done':'status-pending'}">${o.status}</span><div style="font-size:14px;font-weight:700;color:var(--green-deep);margin-top:4px">৳${o.total}</div></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// FARMER PANEL
+function updateFarmerName(val) {
+  if (val.trim()) {
+    document.getElementById('farmerNameDisplay').textContent = val;
+    document.getElementById('farmerInitial').textContent = val[0];
+  }
+}
+function addProduct() {
+  const name = document.getElementById('fProduct').value.trim();
+  const cat = document.getElementById('fCategory').value;
+  const price = parseInt(document.getElementById('fPrice').value);
+  const qty = parseInt(document.getElementById('fQty').value);
+  const loc = document.getElementById('fLocation').value.trim();
+  const farmer = document.getElementById('fName').value.trim() || 'রাহেলা বেগম';
+  if (!name || !cat || !price || !qty) { showToast('সব তথ্য পূরণ করুন!'); return; }
+  const newP = { id: Date.now(), name, category: cat, price, qty, location: loc || 'অজানা', farmer, icon: ICONS[cat] || '📦', fresh: true };
+  products.unshift(newP);
+  filteredProducts = [...products];
+  currentCat = '';
+  currentSearch = '';
+  document.getElementById('fProduct').value = '';
+  document.getElementById('fPrice').value = '';
+  document.getElementById('fQty').value = '';
+  document.getElementById('fLocation').value = '';
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fCategory').value = '';
+  renderMyProducts();
+  document.getElementById('statProducts').textContent = products.length;
+  showToast('✅ ' + name + ' সফলভাবে যোগ হয়েছে!');
+}
+function renderMyProducts() {
+  const el = document.getElementById('myProductList');
+  const myProds = products.filter(p => p.farmer === (document.getElementById('fName').value.trim() || 'রাহেলা বেগম'));
+  if (!myProds.length) {
+    el.innerHTML = '<div class="empty-state" style="padding:30px 0"><div class="empty-icon">🌱</div><div>এখনো কোনো পণ্য নেই</div></div>';
+    return;
+  }
+  el.innerHTML = myProds.map(p => `
+    <div class="my-product-row">
+      <div class="mp-icon">${p.icon}</div>
+      <div class="mp-info">
+        <div class="mp-name">${p.name}</div>
+        <div class="mp-meta">${p.qty} কেজি · ${p.location}</div>
+      </div>
+      <div class="mp-price">৳${p.price}/কেজি</div>
+      <button class="mp-del" onclick="deleteProduct(${p.id})">✕</button>
+    </div>
+  `).join('');
+}
+function deleteProduct(id) {
+  products = products.filter(p => p.id !== id);
+  filteredProducts = [...products];
+  renderMyProducts();
+  renderProducts();
+  showToast('পণ্য সরানো হয়েছে');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== AUTH SYSTEM =====
+let users = [
+  { name: 'করিম মিয়া', phone: '01711000001', pass: '123456', role: 'farmer', location: 'রংপুর' },
+  { name: 'সুমাইয়া বেগম', phone: '01811000002', pass: '123456', role: 'buyer', location: 'ঢাকা' },
+];
+let currentUser = null;
+let selectedRole = 'buyer';
+
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', ['login','register'][i] === tab));
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('regError').style.display = 'none';
+}
+
+function selectRole(role) {
+  selectedRole = role;
+  document.querySelectorAll('.role-opt').forEach(e => e.classList.remove('selected'));
+  document.getElementById('role-' + role).classList.add('selected');
+}
+
+function doLogin() {
+  const phone = document.getElementById('loginPhone').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginError');
+  if (!phone || !pass) { showAuthError(errEl, 'মোবাইল নম্বর ও পাসওয়ার্ড দিন'); return; }
+  const user = users.find(u => (u.phone === phone || u.email === phone) && u.pass === pass);
+  if (!user) { showAuthError(errEl, 'মোবাইল নম্বর বা পাসওয়ার্ড ভুল!'); return; }
+  loginSuccess(user);
+}
+
+function doRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const loc = document.getElementById('regLocation').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const pass2 = document.getElementById('regPass2').value;
+  const errEl = document.getElementById('regError');
+  if (!name || !phone || !pass) { showAuthError(errEl, 'সব তথ্য পূরণ করুন'); return; }
+  if (phone.length < 11) { showAuthError(errEl, 'সঠিক মোবাইল নম্বর দিন'); return; }
+  if (pass.length < 6) { showAuthError(errEl, 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে'); return; }
+  if (pass !== pass2) { showAuthError(errEl, 'পাসওয়ার্ড মিলছে না!'); return; }
+  if (users.find(u => u.phone === phone)) { showAuthError(errEl, 'এই নম্বরে আগেই অ্যাকাউন্ট আছে!'); return; }
+  const newUser = { name, phone, pass, role: selectedRole, location: loc || 'অজানা' };
+  users.push(newUser);
+  loginSuccess(newUser);
+}
+
+function showAuthError(el, msg) {
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function loginSuccess(user) {
+  currentUser = user;
+  document.getElementById('authOverlay').classList.add('hidden');
+  document.getElementById('navAvatar').textContent = user.name[0];
+  document.getElementById('navUserName').textContent = user.name.split(' ')[0];
+  document.getElementById('pdName').textContent = user.name;
+  document.getElementById('pdRole').textContent = user.role === 'farmer' ? '🌾 কৃষক · ' + user.location : '🛒 ক্রেতা · ' + user.location;
+  // Pre-fill farmer panel
+  if (user.role === 'farmer') {
+    document.getElementById('fName').value = user.name;
+    document.getElementById('fLocation').value = user.location;
+    document.getElementById('farmerNameDisplay').textContent = user.name;
+    document.getElementById('farmerInitial').textContent = user.name[0];
+  }
+  showToast('স্বাগতম, ' + user.name + '! 🌾');
+  renderProducts();
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('authOverlay').classList.remove('hidden');
+  document.getElementById('profileDrop').classList.remove('show');
+  document.getElementById('loginPhone').value = '';
+  document.getElementById('loginPass').value = '';
+  cart = [];
+  updateCartCount();
+  switchAuthTab('login');
+}
+
+function toggleProfileDrop() {
+  document.getElementById('profileDrop').classList.toggle('show');
+}
+function closeProfileDrop() {
+  document.getElementById('profileDrop').classList.remove('show');
+  showScreen('orders');
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.nav-user') && !e.target.closest('.profile-drop')) {
+    document.getElementById('profileDrop').classList.remove('show');
+  }
+});
+
+// Init — show auth on load
+renderProducts();
+</script>
+</body>
+</html>
